@@ -14,6 +14,14 @@
   --menta: #4F9A72;
   --terracota: #B23A2E;
   --dorado: #D9A441;
+  /* Gris-café apagado, reservado SOLO para el resultado "neutral" dentro de la
+     semántica positivo/negativo/neutral (badges de historial, juicio de opciones
+     en el reveal). Deliberadamente distinto de --caramelo: el caramelo es el
+     color de marca (CTAs, eyebrow, tema de la decisión) y si lo usáramos también
+     para "neutral" un resultado neutral se leería como "esto es solo color de
+     marca" en vez de leerse como una categoría de resultado real. */
+  --neutral-result: #8C7B6B;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --serif: Georgia, 'Times New Roman', serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
@@ -85,10 +93,10 @@ body.role-select {
   font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: transform 140ms var(--ease-out), background 150ms ease, border-color 150ms ease;
 }
 
-.btn:active { transform: scale(0.98); }
+.btn:active { transform: scale(0.97); }
 
 .btn-big { padding: 20px 24px; font-size: 1.2rem; }
 
@@ -209,7 +217,10 @@ body.player-view .gauge-label { color: var(--espresso); opacity: 0.55; }
   font-weight: 700;
   margin-bottom: 10px;
   line-height: 1;
+  transition: opacity 200ms var(--ease-out);
 }
+
+.gauge-value.is-updating { opacity: 0.4; }
 
 .gauge-value.cash { color: var(--crema); }
 .gauge-value.value { color: var(--dorado); }
@@ -227,10 +238,13 @@ body.player-view .gauge-track { background: var(--crema); }
 .gauge-fill {
   height: 100%;
   width: 0%;
-  transition: width 0.6s ease;
+  transition: width 600ms var(--ease-out);
 }
 .gauge-fill.cash { background: var(--menta); }
-.gauge-fill.value { background: var(--dorado); }
+/* Pequeño desfase respecto al gauge de caja: los dos números del reveal no
+   cambian exactamente al mismo tiempo, lo que ayuda a leer cada cambio por
+   separado en el momento "revelador". */
+.gauge-fill.value { background: var(--dorado); transition-delay: 80ms; }
 .gauge-fill.negative { background: var(--terracota); }
 
 .gauge-goal {
@@ -267,6 +281,15 @@ body.player-view .gauge-goal { color: var(--espresso); opacity: 0.55; }
   padding-top: 28px;
   border-top: 1px solid var(--panel-light);
   text-align: center;
+}
+
+.qr-hint {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--crema);
+  max-width: 320px;
+  margin: 0 auto 16px;
+  line-height: 1.4;
 }
 
 .qr-block img {
@@ -314,8 +337,10 @@ body.player-view .gauge-goal { color: var(--espresso); opacity: 0.55; }
   font-size: 0.78rem;
   cursor: pointer;
   letter-spacing: 0.5px;
+  transition: transform 140ms var(--ease-out), background 150ms ease;
 }
 .reset-corner button:hover { background: rgba(178,58,46,0.12); }
+.reset-corner button:active { transform: scale(0.97); }
 
 /* ---------------------------------------------------------------------- */
 /* Tabla de progresión                                                    */
@@ -340,7 +365,7 @@ body.host-view table.progress-table { min-width: 640px; }
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--crema-alt);
-  opacity: 0.6;
+  opacity: 0.75;
   padding: 8px 10px;
   border-bottom: 1px solid var(--panel-light);
 }
@@ -367,7 +392,7 @@ body.player-view .progress-table td { border-bottom: 1px solid rgba(36,18,9,0.08
 }
 .result-badge.r-pos { background: var(--menta); color: #06251a; }
 .result-badge.r-neg { background: var(--terracota); color: #2c0906; }
-.result-badge.r-neutral { background: var(--caramelo); color: #2c1400; }
+.result-badge.r-neutral { background: var(--neutral-result); color: #251f18; }
 .result-badge.r-none { background: rgba(255,255,255,0.15); color: var(--crema-alt); }
 body.player-view .result-badge.r-none { background: rgba(36,18,9,0.12); color: var(--espresso); }
 
@@ -429,9 +454,9 @@ body.player-view .decision-scenario { color: var(--espresso); opacity: 0.85; }
   line-height: 1.4;
   cursor: pointer;
   margin-bottom: 14px;
-  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  transition: border-color 150ms ease, background 150ms ease, transform 140ms var(--ease-out);
 }
-.option-btn:active { transform: scale(0.98); }
+.option-btn:active { transform: scale(0.97); }
 .option-btn:disabled { opacity: 0.55; cursor: default; }
 .option-btn.selected {
   border-color: var(--caramelo);
@@ -460,12 +485,58 @@ body.host-view .waiting-note { color: var(--crema-alt); }
   background: var(--panel);
   margin-bottom: 10px;
   position: relative;
+  border-left: 4px solid transparent;
 }
-body.player-view .vote-result-option { background: #fff; border: 1px solid var(--crema-alt); }
+body.player-view .vote-result-option { background: #fff; border: 1px solid var(--crema-alt); border-left-width: 4px; }
 
-.vote-result-option.winner {
-  border-left: 4px solid var(--dorado);
+/* Color de JUICIO (¿esta opción era correcta, incorrecta o neutral?) — va sobre
+   cada opción, siempre visible tras el reveal. Es una señal distinta e
+   independiente de cuál opción ganó la votación (ver .winner-tag más abajo):
+   la más votada puede perfectamente ser la incorrecta. */
+.vote-result-option.judge-positive { border-left-color: var(--menta); }
+.vote-result-option.judge-negative { border-left-color: var(--terracota); }
+.vote-result-option.judge-neutral { border-left-color: var(--neutral-result); }
+
+.vote-result-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
 }
+
+.judge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 3px 8px;
+}
+.judge-tag.judge-positive { background: rgba(79,154,114,0.18); color: var(--menta); }
+.judge-tag.judge-negative { background: rgba(178,58,46,0.18); color: var(--terracota); }
+.judge-tag.judge-neutral { background: rgba(140,123,107,0.22); color: var(--neutral-result); }
+
+/* Marca "esta opción ganó la votación" — un dato neutro (cuántos votos sacó),
+   separado a propósito del color de juicio de arriba. Usa la etiqueta de marca
+   (no dorado ni menta/terracota) para no sugerir que "la más votada" implica
+   "la correcta". */
+.winner-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 3px 8px;
+  border: 1px solid var(--caramelo-light);
+  color: var(--caramelo-light);
+}
+body.player-view .winner-tag { color: var(--caramelo); border-color: var(--caramelo); }
 
 .vote-result-text {
   font-size: 0.98rem;
@@ -484,9 +555,8 @@ body.player-view .vote-bar-track { background: var(--crema); }
   height: 100%;
   background: var(--caramelo);
   width: 0%;
-  transition: width 0.5s ease;
+  transition: width 500ms var(--ease-out);
 }
-.vote-result-option.winner .vote-bar-fill { background: var(--dorado); }
 
 .vote-count-label {
   font-size: 0.78rem;
@@ -523,7 +593,7 @@ body.player-view .vote-count-label { color: var(--espresso); opacity: 0.55; }
 .effect-item {
   font-size: 0.95rem;
 }
-.effect-item .arrow-from { opacity: 0.55; }
+.effect-item .arrow-from { opacity: 0.72; }
 .effect-item .arrow-to { font-weight: 700; }
 .effect-item .arrow-to.up { color: var(--menta); }
 .effect-item .arrow-to.down { color: var(--terracota); }

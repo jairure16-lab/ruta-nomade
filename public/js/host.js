@@ -10,6 +10,26 @@
     return Math.max(0, Math.min(100, (value / max) * 100));
   }
 
+  // Actualiza el texto de un gauge y, si cambió, dispara un pulso sutil de
+  // opacidad (feedback de "este número se acaba de mover"). `delayMs` permite
+  // desfasar el gauge de valor respecto al de caja en el reveal.
+  function setGaugeValue(el, text, delayMs) {
+    if (!el) return;
+    if (el.textContent === text) return;
+    el.textContent = text;
+    const pulse = () => {
+      el.classList.add('is-updating');
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('is-updating')));
+    };
+    if (delayMs) setTimeout(pulse, delayMs); else pulse();
+  }
+
+  function judgeMeta(type) {
+    if (type === 'correct') return { cls: 'judge-positive', icon: '✓', label: 'Correcta' };
+    if (type === 'incorrect') return { cls: 'judge-negative', icon: '✕', label: 'Incorrecta' };
+    return { cls: 'judge-neutral', icon: '–', label: 'Neutral' };
+  }
+
   function renderHistoryRows(tbody, history) {
     tbody.innerHTML = '';
     history.forEach((row) => {
@@ -28,8 +48,8 @@
   function renderGauges(prefix, cash, value, goal) {
     const cashEl = document.getElementById(prefix + '-cash');
     const valueEl = document.getElementById(prefix + '-value');
-    if (cashEl) cashEl.textContent = money(cash);
-    if (valueEl) valueEl.textContent = money(value);
+    setGaugeValue(cashEl, money(cash), 0);
+    setGaugeValue(valueEl, money(value), 80);
 
     const cashFill = document.getElementById(prefix + '-cash-fill');
     if (cashFill) {
@@ -58,11 +78,16 @@
     const maxVotes = Math.max(1, ...reveal.counts);
     reveal.options.forEach((opt, idx) => {
       const isWinner = reveal.winningIndex === idx;
+      const judge = judgeMeta(opt.type);
       const div = document.createElement('div');
-      div.className = 'vote-result-option' + (isWinner ? ' winner' : '');
+      div.className = 'vote-result-option ' + judge.cls + (isWinner ? ' winner' : '');
       const votes = reveal.counts[idx];
       const pctWidth = reveal.totalVotes > 0 ? (votes / maxVotes) * 100 : 0;
       div.innerHTML =
+        '<div class="vote-result-head">' +
+          '<span class="judge-tag ' + judge.cls + '">' + judge.icon + ' ' + judge.label + '</span>' +
+          (isWinner ? '<span class="winner-tag">★ Más votada</span>' : '') +
+        '</div>' +
         '<div class="vote-result-text">' + opt.text + '</div>' +
         '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pctWidth + '%"></div></div>' +
         '<div class="vote-count-label">' + votes + ' voto' + (votes === 1 ? '' : 's') + '</div>';
