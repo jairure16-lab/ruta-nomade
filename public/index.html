@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta Nómade — Camino al Millón</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="role-select">
+  <main class="role-card">
+    <h1 class="role-title">Ruta Nómade</h1>
+    <p class="role-subtitle">Camino al Millón</p>
+    <p class="role-help">¿Quiénes son?</p>
+    <button id="btn-host" class="btn btn-caramel btn-big">Somos el equipo</button>
+    <button id="btn-player" class="btn btn-outline btn-big">Soy del público</button>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script>
+    (function () {
+      const savedRole = getRole();
+      if (savedRole === 'host') {
+        window.location.replace('/host.html');
+        return;
+      }
+      if (savedRole === 'player') {
+        window.location.replace('/player.html');
+        return;
+      }
+      document.getElementById('btn-host').addEventListener('click', () => {
+        setRole('host');
+        window.location.href = '/host.html';
+      });
+      document.getElementById('btn-player').addEventListener('click', () => {
+        setRole('player');
+        window.location.href = '/player.html';
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta Nómade — Jugador</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="player-view">
+
+  <!-- LOBBY / ESPERANDO ----------------------------------------------------- -->
+  <section class="screen" data-phase="lobby">
+    <div class="eyebrow">Ruta Nómade</div>
+    <h1 style="margin:0 0 6px;">Camino al Millón</h1>
+    <div class="waiting-note">Esperando a que el equipo inicie la simulación...</div>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja inicial</div>
+        <div class="gauge-value cash" id="lobby-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado inicial</div>
+        <div class="gauge-value value" id="lobby-value"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOTING ---------------------------------------------------------------- -->
+  <section class="screen" data-phase="voting">
+    <div class="eyebrow" id="voting-theme"></div>
+    <h2 class="decision-title" id="voting-title"></h2>
+    <p class="decision-scenario" id="voting-scenario"></p>
+
+    <div id="voting-options"></div>
+    <div class="waiting-note" id="voting-waiting" hidden>Voto registrado — esperando al resto...</div>
+  </section>
+
+  <!-- REVEAL ------------------------------------------------------------ -->
+  <section class="screen" data-phase="reveal">
+    <div class="eyebrow" id="reveal-theme"></div>
+    <h2 class="decision-title" id="reveal-title"></h2>
+    <p class="decision-scenario" id="reveal-scenario"></p>
+
+    <div id="reveal-options"></div>
+    <div id="reveal-explanation"></div>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja</div>
+        <div class="gauge-value cash" id="reveal-cash"></div>
+        <div class="gauge-track"><div class="gauge-fill cash" id="reveal-cash-fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado</div>
+        <div class="gauge-value value" id="reveal-value"></div>
+        <div class="gauge-track"><div class="gauge-fill value" id="reveal-value-fill"></div></div>
+        <div class="gauge-goal">Meta: <span id="reveal-goal"></span></div>
+      </div>
+    </div>
+    <div class="effect-summary" id="reveal-effect"></div>
+  </section>
+
+  <!-- EVENT --------------------------------------------------------------- -->
+  <section class="screen" data-phase="event">
+    <div class="eyebrow">Evento inesperado</div>
+    <div class="event-icon" id="event-icon"></div>
+    <h2 class="decision-title" id="event-title"></h2>
+    <p class="event-desc" id="event-desc"></p>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja</div>
+        <div class="gauge-value cash" id="event-cash"></div>
+        <div class="gauge-track"><div class="gauge-fill cash" id="event-cash-fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado</div>
+        <div class="gauge-value value" id="event-value"></div>
+        <div class="gauge-track"><div class="gauge-fill value" id="event-value-fill"></div></div>
+        <div class="gauge-goal">Meta: <span id="event-goal"></span></div>
+      </div>
+    </div>
+    <div class="effect-summary" id="event-effect"></div>
+  </section>
+
+  <!-- BANKRUPT ------------------------------------------------------------- -->
+  <section class="screen" data-phase="bankrupt">
+    <div class="final-banner bankrupt">
+      <h2 class="final-title">Bancarrota</h2>
+      <p class="final-message">El negocio no resistió. La caja llegó a cero y Ruta Nómade tuvo que cerrar sus puertas.</p>
+    </div>
+  </section>
+
+  <!-- SUCCESS --------------------------------------------------------------- -->
+  <section class="screen" data-phase="success">
+    <div class="final-banner success">
+      <h2 class="final-title">¡Meta alcanzada!</h2>
+      <p class="final-message">Ruta Nómade llegó al millón gracias a las decisiones de esta junta directiva.</p>
+    </div>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja final</div>
+        <div class="gauge-value cash" id="success-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado final</div>
+        <div class="gauge-value value" id="success-value"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGNANT --------------------------------------------------------------- -->
+  <section class="screen" data-phase="stagnant">
+    <div class="final-banner stagnant">
+      <h2 class="final-title">Sobrevivió, pero no despegó</h2>
+      <p class="final-message">Ruta Nómade cerró la simulación de pie, sin quebrar, pero sin llegar al millón.</p>
+    </div>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja final</div>
+        <div class="gauge-value cash" id="stagnant-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado final</div>
+        <div class="gauge-value value" id="stagnant-value"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>

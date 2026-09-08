@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta Nómade — Host</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="host-view">
+
+  <div class="reset-corner">
+    <button id="btn-reset">Reiniciar</button>
+  </div>
+
+  <!-- LOBBY / BRIEFING ---------------------------------------------------- -->
+  <section class="screen" data-phase="lobby">
+    <div class="brand-row">
+      <h1>Ruta Nómade — Camino al Millón</h1>
+    </div>
+    <div class="briefing-story" id="briefing-story"></div>
+
+    <div class="goal-strip">Meta: <span id="lobby-goal"></span></div>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja inicial</div>
+        <div class="gauge-value cash" id="lobby-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado inicial</div>
+        <div class="gauge-value value" id="lobby-value"></div>
+      </div>
+    </div>
+
+    <div class="start-row">
+      <button id="btn-start" class="btn btn-caramel btn-big">Iniciar simulación</button>
+    </div>
+
+    <div class="qr-block">
+      <img src="/qr.png" alt="Código QR para unirse">
+      <div class="qr-link" id="qr-link"></div>
+    </div>
+  </section>
+
+  <!-- VOTING ---------------------------------------------------------------- -->
+  <section class="screen" data-phase="voting">
+    <div class="eyebrow" id="voting-theme"></div>
+    <h2 class="decision-title" id="voting-title"></h2>
+    <p class="decision-scenario" id="voting-scenario"></p>
+
+    <div class="vote-count"><span id="voting-count">0</span> personas votaron</div>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja</div>
+        <div class="gauge-value cash" id="voting-cash"></div>
+        <div class="gauge-track"><div class="gauge-fill cash" id="voting-cash-fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado</div>
+        <div class="gauge-value value" id="voting-value"></div>
+        <div class="gauge-track"><div class="gauge-fill value" id="voting-value-fill"></div></div>
+        <div class="gauge-goal">Meta: <span id="voting-goal"></span></div>
+      </div>
+    </div>
+
+    <div class="option-list" id="voting-options"></div>
+
+    <div class="next-row">
+      <button id="btn-close-vote" class="btn btn-caramel">Cerrar votación</button>
+    </div>
+
+    <div class="progress-table-wrap">
+      <table class="progress-table">
+        <thead><tr><th>#</th><th>Decisión / Evento</th><th></th><th>Caja</th><th>Valor</th></tr></thead>
+        <tbody id="voting-history"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REVEAL ------------------------------------------------------------ -->
+  <section class="screen" data-phase="reveal">
+    <div class="eyebrow" id="reveal-theme"></div>
+    <h2 class="decision-title" id="reveal-title"></h2>
+    <p class="decision-scenario" id="reveal-scenario"></p>
+
+    <div id="reveal-options"></div>
+    <div id="reveal-explanation"></div>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja</div>
+        <div class="gauge-value cash" id="reveal-cash"></div>
+        <div class="gauge-track"><div class="gauge-fill cash" id="reveal-cash-fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado</div>
+        <div class="gauge-value value" id="reveal-value"></div>
+        <div class="gauge-track"><div class="gauge-fill value" id="reveal-value-fill"></div></div>
+        <div class="gauge-goal">Meta: <span id="reveal-goal"></span></div>
+      </div>
+    </div>
+    <div class="effect-summary" id="reveal-effect"></div>
+
+    <div class="next-row">
+      <button id="btn-next-reveal" class="btn btn-caramel">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- EVENT --------------------------------------------------------------- -->
+  <section class="screen" data-phase="event">
+    <div class="eyebrow">Evento inesperado</div>
+    <div class="event-icon" id="event-icon"></div>
+    <h2 class="decision-title" id="event-title"></h2>
+    <p class="event-desc" id="event-desc"></p>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja</div>
+        <div class="gauge-value cash" id="event-cash"></div>
+        <div class="gauge-track"><div class="gauge-fill cash" id="event-cash-fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado</div>
+        <div class="gauge-value value" id="event-value"></div>
+        <div class="gauge-track"><div class="gauge-fill value" id="event-value-fill"></div></div>
+        <div class="gauge-goal">Meta: <span id="event-goal"></span></div>
+      </div>
+    </div>
+    <div class="effect-summary" id="event-effect"></div>
+
+    <div class="next-row">
+      <button id="btn-next-event" class="btn btn-caramel">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- BANKRUPT ------------------------------------------------------------- -->
+  <section class="screen" data-phase="bankrupt">
+    <div class="final-banner bankrupt">
+      <h2 class="final-title">Bancarrota</h2>
+      <p class="final-message">El negocio que heredé no resistió. La caja llegó a cero y Ruta Nómade tuvo que cerrar sus puertas. Cada decisión pesa — y esta junta directiva lo vivió en carne propia.</p>
+    </div>
+    <div class="progress-table-wrap">
+      <table class="progress-table">
+        <thead><tr><th>#</th><th>Decisión / Evento</th><th></th><th>Caja</th><th>Valor</th></tr></thead>
+        <tbody id="bankrupt-history"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SUCCESS --------------------------------------------------------------- -->
+  <section class="screen" data-phase="success">
+    <div class="final-banner success">
+      <h2 class="final-title">¡Meta alcanzada!</h2>
+      <p class="final-message">Ruta Nómade llegó al millón. La junta directiva entendió el consumidor híbrido, usó la IA con criterio y construyó confianza real — y el mercado lo premió.</p>
+    </div>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja final</div>
+        <div class="gauge-value cash" id="success-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado final</div>
+        <div class="gauge-value value" id="success-value"></div>
+      </div>
+    </div>
+    <div class="progress-table-wrap">
+      <table class="progress-table">
+        <thead><tr><th>#</th><th>Decisión / Evento</th><th></th><th>Caja</th><th>Valor</th></tr></thead>
+        <tbody id="success-history"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAGNANT --------------------------------------------------------------- -->
+  <section class="screen" data-phase="stagnant">
+    <div class="final-banner stagnant">
+      <h2 class="final-title">Sobrevivió, pero no despegó</h2>
+      <p class="final-message">Ruta Nómade cerró la simulación de pie, sin quebrar, pero sin llegar al millón. Ni todo perdido ni el caso de éxito soñado: el negocio quedó estancado, tal como estaba antes de esta junta.</p>
+    </div>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="gauge-label">Caja final</div>
+        <div class="gauge-value cash" id="stagnant-cash"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label">Valor de mercado final</div>
+        <div class="gauge-value value" id="stagnant-value"></div>
+      </div>
+    </div>
+    <div class="progress-table-wrap">
+      <table class="progress-table">
+        <thead><tr><th>#</th><th>Decisión / Evento</th><th></th><th>Caja</th><th>Valor</th></tr></thead>
+        <tbody id="stagnant-history"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/host.js"></script>
+</body>
+</html>
