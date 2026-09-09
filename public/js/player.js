@@ -4,6 +4,7 @@
   const CASH_GAUGE_MAX = 40000;
   const VOTED_KEY = 'rn_votedRound'; // "gameId::título" de la última decisión ya votada, persistido
 
+  const socket = io();
   const clientId = getClientId();
 
   function fillPct(value, max) {
@@ -111,11 +112,11 @@
       btn.textContent = opt.text;
       btn.addEventListener('click', () => {
         localStorage.setItem(VOTED_KEY, roundKey);
+        socket.emit('player:vote', { clientId, optionIndex: idx });
         container.querySelectorAll('.option-btn').forEach((b) => (b.disabled = true));
         btn.classList.add('selected');
         waitingNote.hidden = false;
         container.innerHTML = '';
-        postJSON('/api/vote', { clientId, optionIndex: idx }).then(() => refreshNow(render));
       });
       container.appendChild(btn);
     });
@@ -170,5 +171,5 @@
     }
   }
 
-  startPolling(render);
+  socket.on('state', render);
 })();

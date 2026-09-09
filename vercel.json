@@ -1,5 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/qr.png", "destination": "/api/qr" }
-  ]
-}

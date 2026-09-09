@@ -4,6 +4,8 @@
 (function () {
   const CASH_GAUGE_MAX = 40000; // solo referencia visual para el ancho del gauge
 
+  const socket = io();
+
   function fillPct(value, max) {
     return Math.max(0, Math.min(100, (value / max) * 100));
   }
@@ -178,19 +180,15 @@
     document.getElementById('qr-link').textContent = data.publicUrl;
   }).catch(() => {});
 
-  function doHostAction(path) {
-    postJSON(path).then(() => refreshNow(render));
-  }
-
-  document.getElementById('btn-start').addEventListener('click', () => doHostAction('/api/host/start'));
-  document.getElementById('btn-close-vote').addEventListener('click', () => doHostAction('/api/host/close-vote'));
-  document.getElementById('btn-next-reveal').addEventListener('click', () => doHostAction('/api/host/next'));
-  document.getElementById('btn-next-event').addEventListener('click', () => doHostAction('/api/host/next'));
+  document.getElementById('btn-start').addEventListener('click', () => socket.emit('host:start'));
+  document.getElementById('btn-close-vote').addEventListener('click', () => socket.emit('host:closeVote'));
+  document.getElementById('btn-next-reveal').addEventListener('click', () => socket.emit('host:next'));
+  document.getElementById('btn-next-event').addEventListener('click', () => socket.emit('host:next'));
   document.getElementById('btn-reset').addEventListener('click', () => {
     if (confirm('¿Reiniciar la simulación? Esto corta cualquier partida en curso.')) {
-      doHostAction('/api/host/reset');
+      socket.emit('host:reset');
     }
   });
 
-  startPolling(render);
+  socket.on('state', render);
 })();
