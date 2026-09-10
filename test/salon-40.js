@@ -64,7 +64,17 @@ async function run() {
 
     host.emit('host:reset');
     await waitFor(() => latestState && latestState.phase === 'lobby', 'reinicio de partida');
-    console.log(`OK: simulación de ${PARTICIPANTS} participantes superada (votación, revelado y reinicio).`);
+
+    const answerOrders = new Set();
+    for (let game = 0; game < 6; game++) {
+      host.emit('host:start');
+      await waitFor(() => latestState && latestState.phase === 'voting', `inicio aleatorio ${game + 1}`);
+      answerOrders.add(latestState.currentDecision.options.map((option) => option.text).join('|'));
+      host.emit('host:reset');
+      await waitFor(() => latestState && latestState.phase === 'lobby', `reinicio aleatorio ${game + 1}`);
+    }
+    if (answerOrders.size < 2) throw new Error('El orden de respuestas no varió entre partidas');
+    console.log(`OK: simulación de ${PARTICIPANTS} participantes superada; ${answerOrders.size} órdenes de respuesta distintos verificados.`);
   } finally {
     clients.forEach((client) => client.close());
     server.kill();

@@ -44,15 +44,21 @@ app.get('/api/public-url', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// Baraja criptográficamente segura: evita patrones predecibles entre partidas.
+function secureShuffle(items) {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = crypto.randomInt(i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 // Construcción de la secuencia de pasos de una partida: 8 decisiones + 3
 // eventos aleatorios (sin repetir) intercalados después de las rondas 2, 4 y 6.
 // ---------------------------------------------------------------------------
 function buildSequence() {
-  const shuffledEvents = [...EVENTS.keys()];
-  for (let i = shuffledEvents.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledEvents[i], shuffledEvents[j]] = [shuffledEvents[j], shuffledEvents[i]];
-  }
+  const shuffledEvents = secureShuffle([...EVENTS.keys()]);
   const chosenEventIndexes = shuffledEvents.slice(0, 3);
 
   const sequence = [];
@@ -78,6 +84,10 @@ function freshGame() {
     phase: 'lobby', // lobby | voting | reveal | event | bankrupt | success | stagnant
     cash: STARTING_CASH,
     value: STARTING_VALUE,
+    decisions: DECISIONS.map((decision) => ({
+      ...decision,
+      options: secureShuffle(decision.options)
+    })),
     sequence: buildSequence(),
     pointer: 0, // índice del próximo paso a ejecutar
     decisionNumber: 0, // cuántas decisiones ya se resolvieron (para la tabla)
@@ -167,7 +177,7 @@ function resultLabelForOption(option) {
 
 function closeVoting() {
   if (game.phase !== 'voting') return;
-  const decision = DECISIONS[game.currentDecisionIndex];
+  const decision = game.decisions[game.currentDecisionIndex];
   const counts = decision.options.map((_, idx) =>
     Object.values(game.votes).filter((v) => v === idx).length
   );
@@ -177,7 +187,7 @@ function closeVoting() {
   if (totalVotes > 0) {
     const maxVotes = Math.max(...counts);
     const tied = counts.map((c, idx) => (c === maxVotes ? idx : -1)).filter((i) => i >= 0);
-    winningIndex = tied[Math.floor(Math.random() * tied.length)];
+    winningIndex = tied[crypto.randomInt(tied.length)];
   }
 
   let effect = { cashBefore: game.cash, valueBefore: game.value, cashAfter: game.cash, valueAfter: game.value };
@@ -244,7 +254,7 @@ function publicState() {
   };
 
   if (game.phase === 'voting') {
-    const decision = DECISIONS[game.currentDecisionIndex];
+    const decision = game.decisions[game.currentDecisionIndex];
     base.currentDecision = {
       theme: decision.theme,
       title: decision.title,
@@ -284,7 +294,7 @@ io.on('connection', (socket) => {
     if (!clientId || typeof optionIndex !== 'number') return;
     if (game.phase !== 'voting') return;
     if (game.voters.has(clientId)) return; // ya votó esta ronda
-    const decision = DECISIONS[game.currentDecisionIndex];
+    const decision = game.decisions[game.currentDecisionIndex];
     if (optionIndex < 0 || optionIndex >= decision.options.length) return;
 
     game.votes[clientId] = optionIndex;

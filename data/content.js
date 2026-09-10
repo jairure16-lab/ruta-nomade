@@ -34,7 +34,7 @@ const DECISIONS = [
       {
         text: 'Mover todo el presupuesto de marketing a redes sociales y dejar de comunicar nada en tienda física.',
         type: 'incorrect',
-        explanation: 'Ignora que gran parte de los clientes sigue comprando en tienda física. Se pierde a la mitad del público.',
+        explanation: 'Ignora que parte del público sigue comprando en tienda física. La marca pierde consistencia entre canales y desconecta una parte de su recorrido.',
         cash: 4000,
         valorPct: -20
       },
@@ -83,7 +83,7 @@ const DECISIONS = [
       {
         text: 'Usar la IA para personalizar recomendaciones, comunicando abiertamente que se usa IA y cómo se protegen los datos del cliente.',
         type: 'correct',
-        explanation: 'La transparencia sobre el uso de IA es hoy uno de los factores que más genera confianza.',
+        explanation: 'Explicar el uso de IA y el manejo de datos reduce incertidumbre y permite que el cliente decida con información clara.',
         cash: -2000,
         valorPct: 55
       },
@@ -146,14 +146,14 @@ const DECISIONS = [
       {
         text: 'Gastar todo el presupuesto en anuncios pagados masivos, sin construir ninguna relación con la audiencia.',
         type: 'incorrect',
-        explanation: 'Es la opción más cara y la que menos lealtad genera.',
+        explanation: 'Compra alcance de corto plazo, pero no crea un vínculo ni una razón para que el cliente vuelva por iniciativa propia.',
         cash: -14000,
         valorPct: -18
       },
       {
         text: 'No hacer ninguna apuesta nueva, mantener solo la cuenta de Instagram sin estrategia de comunidad.',
         type: 'neutral',
-        explanation: 'Ahorra dinero, pero deja pasar la tendencia que más mueve la fidelización.',
+        explanation: 'Ahorra dinero, pero deja sin trabajar una palanca importante de fidelización: la relación continua con clientes frecuentes.',
         cash: 1000,
         valorPct: -2
       }
@@ -167,7 +167,7 @@ const DECISIONS = [
       {
         text: 'Colaborar con el creador local: contenido auténtico, cercano y creíble para su comunidad.',
         type: 'correct',
-        explanation: 'El contenido auténtico conecta mejor que la producción perfecta, y cuesta una fracción del presupuesto.',
+        explanation: 'Cuando la audiencia y la marca encajan, el contenido auténtico suele ser más creíble y eficiente que comprar alcance genérico.',
         cash: -1000,
         valorPct: 50
       },
@@ -195,7 +195,7 @@ const DECISIONS = [
       {
         text: 'Responder con transparencia total: explicar exactamente qué partes usan IA y cuáles no.',
         type: 'correct',
-        explanation: 'La transparencia sobre el uso de IA es hoy la forma más efectiva de generar y sostener la confianza del consumidor.',
+        explanation: 'La transparencia reduce la incertidumbre: permite explicar qué se generó con IA, qué supervisó el equipo y por qué.',
         cash: -500,
         valorPct: 60
       },
@@ -223,14 +223,14 @@ const DECISIONS = [
       {
         text: 'Rechazar la venta y lanzar, en cambio, una campaña mostrando con claridad la política de privacidad y el control que cada cliente tiene sobre sus datos.',
         type: 'correct',
-        explanation: '8 de cada 10 personas elige activamente marcas en las que confía, aunque cuesten más.',
+        explanation: 'Una política clara de privacidad convierte el cuidado de datos en una señal de confianza y en un diferencial de marca.',
         cash: -3000,
         valorPct: 65
       },
       {
         text: 'Vender los datos de los clientes sin avisarles.',
         type: 'incorrect',
-        explanation: 'El ingreso es grande y rápido, pero si se descubre, la marca puede no recuperarse nunca de esa pérdida de confianza.',
+        explanation: 'El ingreso es grande y rápido, pero vender datos sin consentimiento puede destruir la confianza y exponer a la marca a sanciones.',
         cash: 22000,
         valorPct: -40
       },
