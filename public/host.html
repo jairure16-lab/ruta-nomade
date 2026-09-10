@@ -12,6 +12,17 @@
     <button id="btn-reset">Reiniciar</button>
   </div>
 
+  <!-- LOGIN DE HOST ---------------------------------------------------------- -->
+  <div class="host-login-overlay" id="host-login-overlay">
+    <form class="host-login-card" id="host-login-form">
+      <h2>Acceso de host</h2>
+      <p>Ingresa el código de host para controlar la presentación.</p>
+      <input type="password" inputmode="numeric" id="host-login-pin" class="host-login-input" placeholder="Código" autocomplete="off" autofocus>
+      <div class="host-login-error" id="host-login-error" hidden>Código incorrecto. Inténtalo de nuevo.</div>
+      <button type="submit" class="btn btn-caramel">Iniciar sesión</button>
+    </form>
+  </div>
+
   <!-- LOBBY / BRIEFING ---------------------------------------------------- -->
   <section class="screen" data-phase="lobby">
     <div class="brand-row">

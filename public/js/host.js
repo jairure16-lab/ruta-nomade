@@ -6,16 +6,36 @@
 
   const socket = io();
 
-  function requestHostAccess() {
-    const pin = window.prompt('Ingresa el código de host para controlar la presentación:');
-    if (pin !== null) socket.emit('host:authenticate', { pin });
+  const loginOverlay = document.getElementById('host-login-overlay');
+  const loginForm = document.getElementById('host-login-form');
+  const loginPin = document.getElementById('host-login-pin');
+  const loginError = document.getElementById('host-login-error');
+
+  function showLogin() {
+    loginOverlay.classList.add('is-active');
+    loginPin.value = '';
+    loginPin.focus();
   }
 
-  socket.on('connect', requestHostAccess);
+  function hideLogin() {
+    loginOverlay.classList.remove('is-active');
+  }
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    socket.emit('host:authenticate', { pin: loginPin.value });
+  });
+
+  socket.on('connect', showLogin);
   socket.on('host:authenticated', ({ ok }) => {
-    if (ok) return;
-    window.alert('Código incorrecto. Inténtalo de nuevo.');
-    requestHostAccess();
+    if (ok) {
+      hideLogin();
+      return;
+    }
+    loginError.hidden = false;
+    loginPin.value = '';
+    loginPin.focus();
   });
 
   function fillPct(value, max) {
