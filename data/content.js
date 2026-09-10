@@ -29,7 +29,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'El consumidor híbrido no elige entre digital y físico: usa ambos en la misma compra. Una estrategia integrada evita perderlo en el camino.',
         cash: -4500,
-        valorPct: 40
+        valorPct: 60
       },
       {
         text: 'Mover todo el presupuesto de marketing a redes sociales y dejar de comunicar nada en tienda física.',
@@ -57,7 +57,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'Recorta la fricción entre descubrir y comprar, sin abandonar el canal donde el cliente ya confía.',
         cash: -3000,
-        valorPct: 35
+        valorPct: 50
       },
       {
         text: 'Prohibir que el equipo publique en redes sociales, para "obligar" a la gente a ir directo a la tienda física.',
@@ -85,7 +85,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'La transparencia sobre el uso de IA es hoy uno de los factores que más genera confianza.',
         cash: -2000,
-        valorPct: 38
+        valorPct: 55
       },
       {
         text: 'Usar la IA para generar testimonios y reseñas de clientes que nunca existieron, sin avisar que es contenido artificial.',
@@ -113,7 +113,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'Combina la velocidad de la IA con el criterio humano.',
         cash: -1500,
-        valorPct: 32
+        valorPct: 50
       },
       {
         text: 'Publicar el 100% del contenido generado por IA en automático, sin ninguna revisión editorial.',
@@ -141,7 +141,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'Una comunidad activa reduce el costo de conseguir nuevos clientes, porque los propios miembros recomiendan la marca.',
         cash: -4500,
-        valorPct: 42
+        valorPct: 60
       },
       {
         text: 'Gastar todo el presupuesto en anuncios pagados masivos, sin construir ninguna relación con la audiencia.',
@@ -169,7 +169,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'El contenido auténtico conecta mejor que la producción perfecta, y cuesta una fracción del presupuesto.',
         cash: -1000,
-        valorPct: 36
+        valorPct: 50
       },
       {
         text: 'Pagar al influencer masivo solo por su número de seguidores, sin verificar si su audiencia coincide con la marca.',
@@ -197,7 +197,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: 'La transparencia sobre el uso de IA es hoy la forma más efectiva de generar y sostener la confianza del consumidor.',
         cash: -500,
-        valorPct: 40
+        valorPct: 60
       },
       {
         text: 'Negarlo públicamente, aunque no sea del todo cierto.',
@@ -225,7 +225,7 @@ const DECISIONS = [
         type: 'correct',
         explanation: '8 de cada 10 personas elige activamente marcas en las que confía, aunque cuesten más.',
         cash: -3000,
-        valorPct: 50
+        valorPct: 65
       },
       {
         text: 'Vender los datos de los clientes sin avisarles.',

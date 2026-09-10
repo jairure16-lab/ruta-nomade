@@ -22,6 +22,7 @@ const {
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}`;
+const HOST_PIN = process.env.HOST_PIN || '0101';
 
 const app = express();
 const server = http.createServer(app);
@@ -274,6 +275,11 @@ function broadcastState() {
 io.on('connection', (socket) => {
   socket.emit('state', publicState());
 
+  socket.on('host:authenticate', ({ pin } = {}) => {
+    socket.data.isHost = typeof pin === 'string' && pin === HOST_PIN;
+    socket.emit('host:authenticated', { ok: socket.data.isHost });
+  });
+
   socket.on('player:vote', ({ clientId, optionIndex }) => {
     if (!clientId || typeof optionIndex !== 'number') return;
     if (game.phase !== 'voting') return;
@@ -288,23 +294,27 @@ io.on('connection', (socket) => {
   });
 
   socket.on('host:start', () => {
+    if (!socket.data.isHost) return;
     if (game.phase !== 'lobby') return;
     advance();
     broadcastState();
   });
 
   socket.on('host:closeVote', () => {
+    if (!socket.data.isHost) return;
     closeVoting();
     broadcastState();
   });
 
   socket.on('host:next', () => {
+    if (!socket.data.isHost) return;
     if (game.phase !== 'reveal' && game.phase !== 'event') return;
     advance();
     broadcastState();
   });
 
   socket.on('host:reset', () => {
+    if (!socket.data.isHost) return;
     resetGame();
     broadcastState();
   });

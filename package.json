@@ -4,7 +4,8 @@
   "description": "Ruta Nómade: Camino al Millón — actividad multijugador en vivo para el cierre de una charla sobre tendencias del consumidor 2026.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test:salon": "node test/salon-40.js"
   },
   "engines": {
     "node": ">=18"
@@ -13,5 +14,8 @@
     "express": "^4.19.2",
     "qrcode": "^1.5.4",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3"
   }
 }

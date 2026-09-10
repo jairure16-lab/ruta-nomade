@@ -19,6 +19,7 @@ Para reiniciar el rol guardado en una pestaña (por ejemplo, para volver a elegi
 
 - `PORT` — puerto donde escucha el servidor. Por defecto `3000`.
 - `PUBLIC_URL` — URL pública fija que se codifica en el QR (`/qr.png`) y se muestra como texto en la pantalla de lobby del host. En local, si no se define, cae por defecto a `http://localhost:PORT`. En producción hay que setearla a la URL real donde el público pueda acceder (ver despliegue en Render abajo).
+- `HOST_PIN` — código requerido para controlar la pantalla de host. Para esta presentación es `0101`; configurarlo en Render evita que el público pueda avanzar o reiniciar la partida.
 
 ## Desplegar en Render
 
@@ -26,7 +27,7 @@ Para reiniciar el rol guardado en una pestaña (por ejemplo, para volver a elegi
 2. **Build command**: `npm install`
 3. **Start command**: `npm start`
 4. Desplegar una primera vez sin `PUBLIC_URL` (o con cualquier valor provisorio). Render va a asignar una URL fija tipo `https://ruta-nomade.onrender.com`.
-5. Una vez que Render asignó esa URL, ir a **Environment** en el dashboard del servicio y agregar la variable `PUBLIC_URL` con el valor exacto de esa URL (por ejemplo `https://ruta-nomade.onrender.com`, sin barra final).
+5. Una vez que Render asignó esa URL, ir a **Environment** en el dashboard del servicio y agregar las variables `PUBLIC_URL` con el valor exacto de esa URL (por ejemplo `https://ruta-nomade.onrender.com`, sin barra final) y `HOST_PIN` con `0101`.
 6. Hacer un **redeploy manual** (o esperar a que el cambio de variable dispare uno automático) para que el servidor levante con el `PUBLIC_URL` correcto — si no se redespliega después de setear la variable, el QR sigue apuntando a `localhost`.
 7. Verificar abriendo `/qr.png` y `/api/public-url` en la URL de Render: el link mostrado en la pantalla de host debe coincidir con la URL pública real, no con `localhost`.
 

@@ -6,6 +6,18 @@
 
   const socket = io();
 
+  function requestHostAccess() {
+    const pin = window.prompt('Ingresa el código de host para controlar la presentación:');
+    if (pin !== null) socket.emit('host:authenticate', { pin });
+  }
+
+  socket.on('connect', requestHostAccess);
+  socket.on('host:authenticated', ({ ok }) => {
+    if (ok) return;
+    window.alert('Código incorrecto. Inténtalo de nuevo.');
+    requestHostAccess();
+  });
+
   function fillPct(value, max) {
     return Math.max(0, Math.min(100, (value / max) * 100));
   }
