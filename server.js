@@ -103,6 +103,10 @@ function freshGame() {
 
 let game = freshGame();
 
+// socket.id -> clientId, para saber cuánta gente del público está conectada
+// antes de arrancar (el host no tenía forma de saberlo, votaba a ciegas).
+const connectedPlayers = new Map();
+
 function totalDecisions() {
   return DECISIONS.length;
 }
@@ -250,7 +254,8 @@ function publicState() {
     totalDecisions: totalDecisions(),
     decisionNumber: game.decisionNumber,
     history: game.history,
-    briefing: BRIEFING
+    briefing: BRIEFING,
+    connectedCount: new Set(connectedPlayers.values()).size
   };
 
   if (game.phase === 'voting') {
@@ -284,6 +289,16 @@ function broadcastState() {
 // ---------------------------------------------------------------------------
 io.on('connection', (socket) => {
   socket.emit('state', publicState());
+
+  socket.on('player:join', ({ clientId } = {}) => {
+    if (!clientId) return;
+    connectedPlayers.set(socket.id, clientId);
+    broadcastState();
+  });
+
+  socket.on('disconnect', () => {
+    if (connectedPlayers.delete(socket.id)) broadcastState();
+  });
 
   socket.on('host:authenticate', ({ pin } = {}) => {
     socket.data.isHost = typeof pin === 'string' && pin === HOST_PIN;

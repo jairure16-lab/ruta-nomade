@@ -122,19 +122,15 @@
         '</div>' +
         '<div class="vote-result-text">' + opt.text + '</div>' +
         '<div class="vote-bar-track"><div class="vote-bar-fill" style="width:' + pctWidth + '%"></div></div>' +
-        '<div class="vote-count-label">' + votes + ' voto' + (votes === 1 ? '' : 's') + '</div>';
+        '<div class="vote-count-label">' + votes + ' voto' + (votes === 1 ? '' : 's') + '</div>' +
+        (opt.explanation ? '<div class="option-explanation">' + opt.explanation + '</div>' : '');
       container.appendChild(div);
     });
   }
 
   function renderExplanation(container, reveal) {
-    if (reveal.winningIndex === null) {
-      container.innerHTML = '<div class="no-votes-box">Nadie votó en esta ronda — no se aplicaron cambios.</div>';
-      return;
-    }
-    const opt = reveal.winningOption;
-    container.innerHTML = opt && opt.explanation
-      ? '<div class="explanation-box">' + opt.explanation + '</div>'
+    container.innerHTML = reveal.winningIndex === null
+      ? '<div class="no-votes-box">Nadie votó en esta ronda — no se aplicaron cambios.</div>'
       : '';
   }
 
@@ -149,6 +145,7 @@
       document.getElementById('lobby-goal').textContent = money(state.goal);
       document.getElementById('lobby-cash').textContent = money(state.startingCash);
       document.getElementById('lobby-value').textContent = money(state.startingValue);
+      document.getElementById('lobby-connected').textContent = state.connectedCount;
     }
 
     if (state.phase === 'voting' && state.currentDecision) {
