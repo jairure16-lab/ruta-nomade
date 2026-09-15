@@ -303,28 +303,35 @@ io.on('connection', (socket) => {
     broadcastState();
   });
 
+  // Toda acción de host rechazada avisa por qué: un click que "no hace nada"
+  // es indistinguible de un servidor caído, y eso es lo que falló en clase.
+  function rejectHostAction(socket, reason) {
+    socket.emit('host:actionError', { reason });
+  }
+
   socket.on('host:start', () => {
-    if (!socket.data.isHost) return;
-    if (game.phase !== 'lobby') return;
+    if (!socket.data.isHost) return rejectHostAction(socket, 'No autenticado como host. Volvé a ingresar el PIN.');
+    if (game.phase !== 'lobby') return rejectHostAction(socket, `La partida ya está en fase "${game.phase}", no en lobby.`);
     advance();
     broadcastState();
   });
 
   socket.on('host:closeVote', () => {
-    if (!socket.data.isHost) return;
+    if (!socket.data.isHost) return rejectHostAction(socket, 'No autenticado como host. Volvé a ingresar el PIN.');
+    if (game.phase !== 'voting') return rejectHostAction(socket, `No hay votación abierta (fase actual: "${game.phase}").`);
     closeVoting();
     broadcastState();
   });
 
   socket.on('host:next', () => {
-    if (!socket.data.isHost) return;
-    if (game.phase !== 'reveal' && game.phase !== 'event') return;
+    if (!socket.data.isHost) return rejectHostAction(socket, 'No autenticado como host. Volvé a ingresar el PIN.');
+    if (game.phase !== 'reveal' && game.phase !== 'event') return rejectHostAction(socket, `No se puede avanzar desde la fase "${game.phase}".`);
     advance();
     broadcastState();
   });
 
   socket.on('host:reset', () => {
-    if (!socket.data.isHost) return;
+    if (!socket.data.isHost) return rejectHostAction(socket, 'No autenticado como host. Volvé a ingresar el PIN.');
     resetGame();
     broadcastState();
   });

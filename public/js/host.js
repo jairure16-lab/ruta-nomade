@@ -208,6 +208,13 @@
     }
   }
 
+  socket.on('host:actionError', ({ reason }) => {
+    if (reason && reason.startsWith('No autenticado')) {
+      showLogin();
+    }
+    alert(reason || 'La acción no se pudo completar.');
+  });
+
   fetch('/api/public-url').then((r) => r.json()).then((data) => {
     document.getElementById('qr-link').textContent = data.publicUrl;
   }).catch(() => {});
