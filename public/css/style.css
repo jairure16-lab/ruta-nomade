@@ -97,6 +97,7 @@ body.role-select {
 }
 
 .btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 
 .btn-big { padding: 20px 24px; font-size: 1.2rem; }
 
@@ -375,6 +376,26 @@ body.player-view .gauge-goal { color: var(--espresso); opacity: 0.55; }
   width: auto;
   padding: 18px 48px;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Banner de conexión                                                     */
+/* ---------------------------------------------------------------------- */
+
+.connection-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--terracota);
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.connection-banner[hidden] { display: none !important; }
 
 /* ---------------------------------------------------------------------- */
 /* Reset flotante                                                         */

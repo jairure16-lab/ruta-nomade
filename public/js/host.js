@@ -38,6 +38,19 @@
     loginPin.focus();
   });
 
+  const connectionBanner = document.getElementById('connection-banner');
+  const hostButtonIds = ['btn-start', 'btn-close-vote', 'btn-next-reveal', 'btn-next-event', 'btn-reset'];
+  function setConnected(isConnected) {
+    connectionBanner.hidden = isConnected;
+    hostButtonIds.forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.disabled = !isConnected;
+    });
+  }
+  setConnected(false);
+  socket.on('connect', () => setConnected(true));
+  socket.on('disconnect', () => setConnected(false));
+
   function fillPct(value, max) {
     return Math.max(0, Math.min(100, (value / max) * 100));
   }

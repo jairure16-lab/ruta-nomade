@@ -6,7 +6,14 @@
 
   const socket = io();
   const clientId = getClientId();
-  socket.on('connect', () => socket.emit('player:join', { clientId }));
+  let pendingVoteRoundKey = null; // roundKey de un voto emitido, aún sin 'vote:ack' del servidor
+
+  const connectionBanner = document.getElementById('connection-banner');
+  socket.on('connect', () => {
+    connectionBanner.hidden = true;
+    socket.emit('player:join', { clientId });
+  });
+  socket.on('disconnect', () => { connectionBanner.hidden = false; });
 
   function fillPct(value, max) {
     return Math.max(0, Math.min(100, (value / max) * 100));
@@ -98,8 +105,14 @@
     if (alreadyVoted) {
       container.innerHTML = '';
       waitingNote.hidden = false;
+      waitingNote.textContent = 'Voto registrado — esperando al resto...';
       return;
     }
+
+    // Ya se emitió el voto y estamos esperando confirmación del servidor:
+    // no reconstruir los botones (perderíamos el estado "enviando") si llega
+    // un re-render mientras tanto (p. ej. otro jugador acaba de votar).
+    if (pendingVoteRoundKey === roundKey) return;
 
     waitingNote.hidden = true;
     container.innerHTML = '';
@@ -108,12 +121,42 @@
       btn.className = 'option-btn';
       btn.textContent = opt.text;
       btn.addEventListener('click', () => {
-        localStorage.setItem(VOTED_KEY, roundKey);
-        socket.emit('player:vote', { clientId, optionIndex: idx });
+        pendingVoteRoundKey = roundKey;
         container.querySelectorAll('.option-btn').forEach((b) => (b.disabled = true));
         btn.classList.add('selected');
         waitingNote.hidden = false;
-        container.innerHTML = '';
+        waitingNote.textContent = 'Enviando tu voto...';
+
+        let settled = false;
+        const onAck = () => {
+          if (settled) return;
+          settled = true;
+          pendingVoteRoundKey = null;
+          localStorage.setItem(VOTED_KEY, roundKey);
+          waitingNote.textContent = 'Voto registrado — esperando al resto...';
+          container.innerHTML = '';
+        };
+        socket.once('vote:ack', onAck);
+
+        setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          pendingVoteRoundKey = null;
+          socket.off('vote:ack', onAck);
+          waitingNote.hidden = true;
+          container.innerHTML = '';
+          const errorBox = document.createElement('div');
+          errorBox.className = 'waiting-note';
+          errorBox.textContent = 'No se pudo confirmar tu voto (conexión débil).';
+          const retryBtn = document.createElement('button');
+          retryBtn.className = 'btn btn-outline';
+          retryBtn.textContent = 'Reintentar voto';
+          retryBtn.addEventListener('click', () => renderVotingOptions(d, gameId));
+          container.appendChild(errorBox);
+          container.appendChild(retryBtn);
+        }, 5000);
+
+        socket.emit('player:vote', { clientId, optionIndex: idx });
       });
       container.appendChild(btn);
     });
